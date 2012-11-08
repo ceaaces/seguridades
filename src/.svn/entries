@@ -1,0 +1,34 @@
+10
+
+dir
+776
+http://192.168.10.224/svn/seguridades/src
+http://192.168.10.224/svn
+
+
+
+2012-11-06T15:11:22.038704Z
+776
+eteran
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+8a3e2a92-e4ff-4353-805d-85db751410f0
+
+main
+dir
+
+test
+dir
+

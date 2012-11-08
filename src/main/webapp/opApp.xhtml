@@ -1,0 +1,113 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j">
+
+<ui:composition template="/templates/template.xhtml">
+	<ui:define name="tituloPagina">APLICACIONES</ui:define>
+	<ui:define name="contenido">
+		<h:outputStylesheet>
+		.tablaAppRoles{width:460px; height:150px;border:0px;}		
+	</h:outputStylesheet>
+		<h:form>
+			<rich:panel style="height: 400px;">
+				<f:facet name="header">
+					<h:panelGrid columns="3" cellspacing="5">
+						<h:commandLink title="Regresar"
+							action="#{aplicacionRolController.regresar}">
+							<h:graphicImage value="/images/regresar.png"
+								style="width:24px; height:24px;" alt="ai" />
+						</h:commandLink>
+						<div style="width: 90px" />
+						<rich:messages id="mensajes" ajaxRendered="true" />
+					</h:panelGrid>
+				</f:facet>
+				<div style="margin-left: 45px">
+					<h:panelGrid id="infoRoles" columns="2" cellspacing="5">
+						<h:outputText value=" APLICACION: " />
+						<h:panelGrid columns="1"
+							style="background-color:#E6F8E1;border-style:solid;border-width:1px;border-color: #28810B;">
+							<h:inputText style="width:342px"
+								value="#{aplicacionRolController.aplicacion.nombre}"
+								onkeyup="this.value = this.value.toUpperCase()" />
+						</h:panelGrid>
+						<h:inputHidden
+							value="#{aplicacionRolController.aplicacionRol.idTabla}" />
+						<h:outputText value="" />
+						<h:outputText value="ROL: " />
+						<h:inputText style="width:245px"
+							value="#{aplicacionRolController.aplicacionRol.nombre}"
+							onkeyup="this.value = this.value.toUpperCase()" />
+						<h:outputText value="DESCRIPCION: " />
+						<h:inputTextarea style="width:345px;height:50px"
+							value="#{aplicacionRolController.aplicacionRol.descripcion}" />
+						<h:outputText value="" />
+						<a4j:commandLink title="Agregar rol" value="Agregar"
+							action="#{aplicacionRolController.agregarAppRol}"
+							render="infoRoles,tablaRoles" />
+						<h:outputText value="" />
+						<rich:extendedDataTable id="tablaRoles" styleClass="tablaAppRoles"
+							value="#{aplicacionRolController.aplicacion.roles}"
+							var="rolesApp">
+							<rich:column width="0px">
+								<h:inputHidden value="#{rolesApp.idTabla}" />
+							</rich:column>
+							<rich:column width="50px">
+								<f:facet name="header">ORDEN</f:facet>
+								<h:outputText value="#{rolesApp.numero}" />
+							</rich:column>
+							<rich:column width="195px">
+								<f:facet name="header">ROL</f:facet>
+								<h:outputText value="#{rolesApp.nombre}" />
+							</rich:column>
+							<rich:column width="150px">
+								<f:facet name="header">DESCRIPCION</f:facet>
+								<h:outputText value="#{rolesApp.descripcion}" />
+							</rich:column>
+							<rich:column width="60px">
+								<div style="margin-top: -4px">
+									<h:panelGrid columns="2" cellspacing="5">
+										<h:commandLink title="Editar">
+											<h:graphicImage value="/images/edit.png"
+												style="width:16px; height:16px;" alt="ai" />
+											<f:setPropertyActionListener
+												target="#{aplicacionRolController.aplicacionRol}"
+												value="#{rolesApp}" />
+										</h:commandLink>
+										<h:commandLink title="Eliminar"
+											action="#{aplicacionRolController.eliminarAppRol}">
+											<h:graphicImage value="/images/delete.png"
+												style="width:16px; height:16px;" alt="ai" />
+											<a4j:ajax event="click" render="infoRoles,tablaRoles"
+												status="eliminandoRol">
+												<f:setPropertyActionListener
+													target="#{aplicacionRolController.aplicacionRol}"
+													value="#{rolesApp}" />
+											</a4j:ajax>
+										</h:commandLink>
+									</h:panelGrid>
+								</div>
+							</rich:column>
+						</rich:extendedDataTable>
+					</h:panelGrid>
+					<h:panelGrid columns="2">
+						<a4j:commandLink title="Guardar aplicacion"
+							value="#{aplicacionRolController.accionApp}"
+							action="#{aplicacionRolController.guardarAppMasRoles}"
+							render="@page" status="guardandoApp" />
+						<a4j:status name="guardandoApp">
+							<f:facet name="start">
+								<h:graphicImage value="/images/saving.gif"
+									style="width:24px; height:24px;" alt="ai" />
+							</f:facet>
+						</a4j:status>
+					</h:panelGrid>
+				</div>
+			</rich:panel>
+		</h:form>
+	</ui:define>
+</ui:composition>
+</html>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jee="http://www.springframework.org/schema/jee" xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context-3.0.xsd
+		http://www.springframework.org/schema/jee
+		http://www.springframework.org/schema/jee/spring-jee-3.0.xsd
+		http://www.springframework.org/schema/util 
+		http://www.springframework.org/schema/util/spring-util-3.0.xsd">
+
+	<context:annotation-config />
+
+	<util:properties id="jnidProperties">
+		<prop key="java.naming.factory.initial">org.jboss.naming.remote.client.InitialContextFactory
+		</prop>
+		<prop key="java.naming.provider.url">remote://localhost:4447</prop>
+		<!-- <prop key="java.naming.security.principal">ejbceaaces</prop> -->
+		<!-- <prop key="java.naming.security.credentials">LS0tY2VhYWNlcw==</prop> -->
+		<prop key="java.naming.factory.url.pkgs">org.jboss.ejb.client.naming</prop>
+	</util:properties>
+
+	<bean id="jboss7Ejb3ContextHelper" class="ec.gob.ceaaces.util.JBOSS7EJB3ContextHelper">
+		<constructor-arg>
+			<map>
+				<entry key="evaluacionService"
+					value="ejb:/ceaacesPrincipal//evaluacionService!ec.gob.ceaaces.services.remote.EvaluacionServiceRemote"></entry>
+				<entry key="catalogoService"
+					value="ejb:/ceaacesPrincipal//catalogoService!ec.gob.ceaaces.services.remote.CatalogoServiceRemote"></entry>
+				<entry key="seguridadService"
+					value="ejb:/ceaacesPrincipal//seguridadService!ec.gob.ceaaces.services.remote.SeguridadServiceRemote"></entry>
+			</map>
+		</constructor-arg>
+	</bean>
+
+	<bean id="seguridadModulos"
+		class="ec.gob.ceaaces.services.impl.ServicioSeguridadModulosImpl" />
+
+	<bean id="seguridadPerfiles"
+		class="ec.gob.ceaaces.services.impl.ServicioSeguridadPerfilesImpl" />
+
+	<bean id="seguridadUsuarios"
+		class="ec.gob.ceaaces.services.impl.ServicioSeguridadUsuariosImpl" />
+
+	<bean id="aplicacionRolController" class="ec.gob.ceaaces.controller.AplicacionRolController"
+		scope="session" />
+
+	<bean id="moduloController" class="ec.gob.ceaaces.controller.ModuloController"
+		scope="session" />
+
+	<bean id="perfilController" class="ec.gob.ceaaces.controller.PerfilController"
+		scope="session" />
+
+	<bean id="usuarioController" class="ec.gob.ceaaces.controller.UsuarioController"
+		scope="session" />
+
+	<bean id="valoresUsuarioController" class="ec.gob.ceaaces.controller.ValoresUsuarioController"
+		scope="session" />
+
+</beans>

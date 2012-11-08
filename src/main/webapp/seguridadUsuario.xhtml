@@ -1,0 +1,77 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j">
+
+<ui:composition template="/templates/template.xhtml">
+	<ui:define name="tituloPagina">USUARIOS</ui:define>
+	<ui:define name="contenido">
+		<h:form>
+			<rich:panel style="height: 400px;">
+				<f:facet name="header">
+					<h:panelGrid columns="3" cellspacing="5">
+						<rich:messages id="mensajes" ajaxRendered="true" />
+						<div style="width: 585px; height: 24px;" />
+						<h:commandLink value="CREAR"
+							action="#{usuarioController.irNuevoUsuario}">
+							<a4j:param value="Guardar"
+								assignTo="#{usuarioController.accionUsuario}" />
+							<a4j:param value="false"
+								assignTo="#{usuarioController.verUsername}" />
+							<a4j:param value="1" assignTo="#{usuarioController.indicador}" />
+						</h:commandLink>
+					</h:panelGrid>
+				</f:facet>
+				<div style="margin-left: 170px">
+					<rich:extendedDataTable id="tablaUsuarios" style="width:270px"
+						value="#{usuarioController.listaUsuario}" var="usu" rows="10"
+						frozenColumns="3">
+						<f:facet name="header">LISTA DE USUARIOS</f:facet>
+						<rich:column width="50px">
+							<f:facet name="header">ORDEN</f:facet>
+							<h:outputText value="#{usu.numero}" />
+						</rich:column>
+						<rich:column width="160px">
+							<f:facet name="header">USUARIO</f:facet>
+							<h:outputText value="#{usu.username}" />
+						</rich:column>
+						<rich:column width="60px">
+							<div style="margin-top: -4px">
+								<h:panelGrid columns="2" cellspacing="5">
+									<h:commandLink title="Editar"
+										action="#{usuarioController.editar}">
+										<h:graphicImage value="/images/edit.png"
+											style="width:16px; height:16px;" alt="ai" />
+										<a4j:param value="Guardar cambios"
+											assignTo="#{usuarioController.accionUsuario}" />
+										<f:setPropertyActionListener
+											target="#{usuarioController.idUsuario}"
+											value="#{usu.username}" />
+										<a4j:param value="true"
+											assignTo="#{usuarioController.verUsername}" />
+										<a4j:param value="0" assignTo="#{usuarioController.indicador}" />
+									</h:commandLink>
+									<a4j:commandLink title="Eliminar" render="tablaUsuarios"
+										action="#{usuarioController.eliminar}">
+										<h:graphicImage value="/images/delete.png"
+											style="width:16px; height:16px;" alt="ai" />
+										<f:setPropertyActionListener
+											target="#{usuarioController.idUsuario}"
+											value="#{usu.username}" />
+									</a4j:commandLink>
+								</h:panelGrid>
+							</div>
+						</rich:column>
+						<f:facet name="footer">
+							<rich:dataScroller page="1" />
+						</f:facet>
+					</rich:extendedDataTable>
+				</div>
+			</rich:panel>
+		</h:form>
+	</ui:define>
+</ui:composition>
+</html>

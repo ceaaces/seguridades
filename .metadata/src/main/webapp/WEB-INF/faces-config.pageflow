@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pageflow:Pageflow xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:pageflow="http://www.sybase.com/suade/pageflow" id="pf13437502955850" configfile="/seguridades/src/main/webapp/WEB-INF/faces-config.xml">
+  <nodes xsi:type="pageflow:PFPage" name="seguridadApp.xhtml" x="338" y="178" id="pf13441331983843" referenceLink="//@navigationRule.10/@fromViewId|" outlinks="pf13515484784430 pf13521276668700" inlinks="pf13456741501700" path="/seguridadApp.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="opApp.xhtml" x="122" y="178" id="pf13441331983845" referenceLink="//@navigationRule.7/@fromViewId|" outlinks="pf13456741501700 pf13521278655811" inlinks="pf13515484784430" path="/opApp.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="nopModulo.xhtml" x="122" y="562" id="pf13467009820112" referenceLink="//@navigationRule.5/@fromViewId|" path="/nopModulo.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="templates/template.xhtml" x="122" y="946" id="pf135048473371615" referenceLink="//@navigationRule.3/@fromViewId|" outlinks="pf13515484784431 pf13516048949710" inlinks="pf13516049562823" path="/templates/template.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="ingreso.xhtml" x="338" y="946" id="pf13515183292462" referenceLink="//@navigationRule.10/@navigationCase.0/@toViewId|" outlinks="pf13516049562823" inlinks="pf13516048949710 pf13521276668700 pf13521278655812 pf13521278655813 pf13521278655814 pf13521278655811 pf13521278655815 pf13521278655816 pf13521278655817" path="/ingreso.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="seguridadModulo.xhtml" x="554" y="562" id="pf13515484784443" referenceLink="//@navigationRule.4/@fromViewId|" outlinks="pf13515484784444 pf13521278655812" inlinks="pf13515484784445" path="/seguridadModulo.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="opModulo.xhtml" x="338" y="562" id="pf13515484784446" referenceLink="//@navigationRule.9/@fromViewId|" outlinks="pf13515484784445 pf13521278655816" inlinks="pf13515484784444 pf13515484784431" path="/opModulo.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="seguridadPerfil.xhtml" x="338" y="1330" id="pf13515484784447" referenceLink="//@navigationRule.5/@fromViewId|" outlinks="pf13515484784448 pf13521278655813" inlinks="pf13515484784449" path="/seguridadPerfil.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="opPerfil.xhtml" x="122" y="1330" id="pf135154847844410" referenceLink="//@navigationRule.8/@fromViewId|" outlinks="pf13515484784449 pf13521278655815" inlinks="pf13515484784448" path="/opPerfil.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="seguridadUsuario.xhtml" x="338" y="1714" id="pf135154847844411" referenceLink="//@navigationRule.6/@fromViewId|" outlinks="pf135154847844412 pf13521278655814" inlinks="pf135154847844413" path="/seguridadUsuario.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="opUsuario.xhtml" x="122" y="1714" id="pf135154847844414" referenceLink="//@navigationRule.10/@fromViewId|" outlinks="pf135154847844413 pf13521278655817" inlinks="pf135154847844412" path="/opUsuario.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="ingreso.xhtml" x="122" y="2098" id="pf135154930149516" referenceLink="//@navigationRule.2/@navigationCase.0/@toViewId|" path="/ingreso.xhtml"/>
+  <links id="pf13456741501700" target="pf13441331983843" source="pf13441331983845" outcome="seguridadApp" redirect="true"/>
+  <links id="pf13515484784430" target="pf13441331983845" source="pf13441331983843" outcome="opApp" redirect="true"/>
+  <links id="pf13515484784444" target="pf13515484784446" source="pf13515484784443" outcome="opModulo" redirect="true"/>
+  <links id="pf13515484784445" target="pf13515484784443" source="pf13515484784446" outcome="seguridadModulo" redirect="true"/>
+  <links id="pf13515484784431" target="pf13515484784446" source="pf135048473371615" outcome="templateMenu" redirect="true"/>
+  <links id="pf13515484784448" target="pf135154847844410" source="pf13515484784447" outcome="opPerfil" redirect="true"/>
+  <links id="pf13515484784449" target="pf13515484784447" source="pf135154847844410" outcome="seguridadPerfil" redirect="true"/>
+  <links id="pf135154847844412" target="pf135154847844414" source="pf135154847844411" outcome="opUsuario" redirect="true"/>
+  <links id="pf135154847844413" target="pf135154847844411" source="pf135154847844414" outcome="seguridadUsuario" redirect="true"/>
+  <links id="pf13516048949710" target="pf13515183292462" source="pf135048473371615" outcome="outSeguridades" redirect="true"/>
+  <links id="pf13516049562823" target="pf135048473371615" source="pf13515183292462" outcome="inSeguridades"/>
+  <links id="pf13521276668700" target="pf13515183292462" source="pf13441331983843" outcome="outSeguridades" redirect="true"/>
+  <links id="pf13521278655812" target="pf13515183292462" source="pf13515484784443" outcome="outSeguridades" redirect="true"/>
+  <links id="pf13521278655813" target="pf13515183292462" source="pf13515484784447" outcome="outSeguridades" redirect="true"/>
+  <links id="pf13521278655814" target="pf13515183292462" source="pf135154847844411" outcome="outSeguridades" redirect="true"/>
+  <links id="pf13521278655811" target="pf13515183292462" source="pf13441331983845" outcome="outSeguridades" redirect="true"/>
+  <links id="pf13521278655815" target="pf13515183292462" source="pf135154847844410" outcome="outSeguridades" redirect="true"/>
+  <links id="pf13521278655816" target="pf13515183292462" source="pf13515484784446" outcome="outSeguridades" redirect="true"/>
+  <links id="pf13521278655817" target="pf13515183292462" source="pf135154847844414" outcome="outSeguridades" redirect="true"/>
+</pageflow:Pageflow>

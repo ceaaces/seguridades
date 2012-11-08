@@ -1,0 +1,61 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j">
+
+<ui:composition template="/templates/template.xhtml">
+	<ui:define name="tituloPagina">APLICACIONES</ui:define>
+	<ui:define name="contenido">
+		<h:form>
+			<rich:panel style="height: 400px;">
+				<f:facet name="header">
+					<h:panelGrid columns="3" cellspacing="5">
+						<rich:messages id="mensajes" ajaxRendered="true" />
+						<div style="width: 585px; height: 24px;" />
+						<h:commandLink value="CREAR"
+							action="#{aplicacionRolController.nuevaApp}">
+							<a4j:param value="Guardar"
+								assignTo="#{aplicacionRolController.accionApp}" />
+						</h:commandLink>
+					</h:panelGrid>
+				</f:facet>
+				<div style="margin-left: 145px">
+					<rich:dataTable id="vistaApp" style="width:350px"
+						value="#{aplicacionRolController.listaAplicacion}" var="app"
+						rows="8">
+						<f:facet name="header">LISTA DE APLICACIONES</f:facet>
+						<rich:column>
+							<f:facet name="header">ID</f:facet>
+							<h:outputText value="#{app.id}" />
+						</rich:column>
+						<rich:column>
+							<f:facet name="header">APLICACION</f:facet>
+							<h:outputText value="#{app.nombre}" />
+						</rich:column>
+						<rich:column width="5px">
+							<h:commandLink title="Editar"
+								action="#{aplicacionRolController.cargarApp}">
+								<h:graphicImage value="/images/edit.png"
+									style="width:16px; height:16px;" alt="ai" />
+								<a4j:ajax event="click" render="@page">
+									<a4j:param value="Guardar cambios"
+										assignTo="#{aplicacionRolController.accionApp}" />
+									<f:setPropertyActionListener
+										target="#{aplicacionRolController.idAplicacion}"
+										value="#{app.id}" />
+								</a4j:ajax>
+							</h:commandLink>
+						</rich:column>
+						<f:facet name="footer">
+							<rich:dataScroller page="1" />
+						</f:facet>
+					</rich:dataTable>
+				</div>
+			</rich:panel>
+		</h:form>
+	</ui:define>
+</ui:composition>
+</html>

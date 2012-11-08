@@ -1,0 +1,95 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j">
+
+<ui:composition template="/templates/template.xhtml">
+	<ui:define name="tituloPagina">PERFILES</ui:define>
+	<ui:define name="contenido">
+		<h:form>
+			<rich:panel style="height: 400px;">
+				<f:facet name="header">
+					<h:panelGrid columns="2">
+						<div style="width: 155px; height: 24px" />
+						<rich:messages id="mensajes" ajaxRendered="true" />
+					</h:panelGrid>
+				</f:facet>
+				<div style="margin-left: 160px">
+					<h:panelGrid columns="4" cellspacing="5">
+						<h:outputText value="APLICACION: " />
+						<h:selectOneMenu id="selectApp"
+							value="#{perfilController.idAplicacion}"
+							valueChangeListener="#{perfilController.cargarPerfiles}">
+							<a4j:ajax event="valueChange" render="opCrear,tablaPerfiles"
+								execute="@this" />
+							<f:selectItems value="#{perfilController.listaAplicacion}"
+								var="apps" itemValue="#{apps.id}" itemLabel="#{apps.nombre}" />
+						</h:selectOneMenu>
+						<h:commandLink action="#{perfilController.irNuevoPerfil}">
+							<a4j:outputPanel ajaxRendered="true">
+								<h:outputText id="opCrear" value="CREAR"
+									rendered="#{perfilController.idAplicacion != '0' }" />
+							</a4j:outputPanel>
+							<a4j:param value="Guardar"
+								assignTo="#{perfilController.accionPerfil}" />
+						</h:commandLink>
+						<a4j:status name="eliminandoPerf">
+							<f:facet name="start">
+								<h:graphicImage value="/images/saving.gif"
+									style="width:16px; height:16x;" alt="ai" />
+							</f:facet>
+						</a4j:status>
+					</h:panelGrid>
+					<a4j:outputPanel ajaxRendered="true">
+						<rich:extendedDataTable id="tablaPerfiles" rows="10"
+							style="width:310px" frozenColumns="3"
+							rendered="#{perfilController.idAplicacion != '0' }"
+							value="#{perfilController.listaPerfil}" var="pp">
+							<f:facet name="header">LISTA DE PERFILES</f:facet>
+							<rich:column width="40px">
+								<f:facet name="header">ID</f:facet>
+								<h:outputText value="#{pp.id}" />
+							</rich:column>
+							<rich:column width="210px">
+								<f:facet name="header">PERFIL</f:facet>
+								<h:outputText value="#{pp.nombre}" />
+							</rich:column>
+							<rich:column width="60px">
+								<div style="margin-top: -4px">
+									<h:panelGrid columns="2" cellspacing="5">
+										<h:commandLink title="Editar"
+											action="#{perfilController.irOpPerfil}">
+											<h:graphicImage value="/images/edit.png"
+												style="width:16px; height:16px;" alt="ai" />
+											<a4j:param value="Guardar cambios"
+												assignTo="#{perfilController.accionPerfil}" />
+											<f:setPropertyActionListener
+												target="#{perfilController.idPerfil}" value="#{pp.id}" />
+										</h:commandLink>
+										<a4j:commandLink title="Eliminar" execute="@this"
+											render="tablaPerfiles" status="eliminandoPerf"
+											action="#{usuarioController.eliminarPerfil}">
+											<h:graphicImage value="/images/delete.png"
+												style="width:16px; height:16px;" alt="ai" />
+											<f:setPropertyActionListener
+												target="#{usuarioController.idPerfil}" value="#{pp.id}" />
+											<a4j:param value="0"
+												assignTo="#{perfilController.idAplicacion}" />
+										</a4j:commandLink>
+									</h:panelGrid>
+								</div>
+							</rich:column>
+							<f:facet name="footer">
+								<rich:dataScroller page="1" />
+							</f:facet>
+						</rich:extendedDataTable>
+					</a4j:outputPanel>
+				</div>
+			</rich:panel>
+		</h:form>
+	</ui:define>
+</ui:composition>
+</html>

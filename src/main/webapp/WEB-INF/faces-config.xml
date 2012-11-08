@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<faces-config xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd"
+	version="2.0">
+
+	<application>
+		<el-resolver>org.springframework.web.jsf.el.SpringBeanFacesELResolver</el-resolver>
+	</application>
+
+	<navigation-rule>
+		<from-view-id>/opApp.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>seguridadApp</from-outcome>
+			<to-view-id>/seguridadApp.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<from-view-id>/ingreso.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>inSeguridades</from-outcome>
+			<to-view-id>/templates/template.xhtml</to-view-id>			
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<from-view-id>/templates/template.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>outSeguridades</from-outcome>
+			<to-view-id>/ingreso.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+	
+	<navigation-rule>
+		<from-view-id>/seguridadApp.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>outSeguridades</from-outcome>
+			<to-view-id>/ingreso.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+	
+	<navigation-rule>
+		<from-view-id>/seguridadModulo.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>outSeguridades</from-outcome>
+			<to-view-id>/ingreso.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+	
+	<navigation-rule>
+		<from-view-id>/seguridadPerfil.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>outSeguridades</from-outcome>
+			<to-view-id>/ingreso.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+	
+	<navigation-rule>
+		<from-view-id>/seguridadUsuario.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>outSeguridades</from-outcome>
+			<to-view-id>/ingreso.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+	
+	<navigation-rule>
+		<from-view-id>/opApp.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>outSeguridades</from-outcome>
+			<to-view-id>/ingreso.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+	
+	<navigation-rule>
+		<from-view-id>/opPerfil.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>outSeguridades</from-outcome>
+			<to-view-id>/ingreso.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+	
+	<navigation-rule>
+		<from-view-id>/opModulo.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>outSeguridades</from-outcome>
+			<to-view-id>/ingreso.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+	
+	<navigation-rule>
+		<from-view-id>/opUsuario.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>outSeguridades</from-outcome>
+			<to-view-id>/ingreso.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<from-view-id>/seguridadApp.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>opApp</from-outcome>
+			<to-view-id>/opApp.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<from-view-id>/seguridadModulo.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>opModulo</from-outcome>
+			<to-view-id>/opModulo.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<from-view-id>/opModulo.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>seguridadModulo</from-outcome>
+			<to-view-id>/seguridadModulo.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<from-view-id>/templates/template.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>templateMenu</from-outcome>
+			<to-view-id>/opModulo.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<from-view-id>/seguridadPerfil.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>opPerfil</from-outcome>
+			<to-view-id>/opPerfil.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<from-view-id>/opPerfil.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>seguridadPerfil</from-outcome>
+			<to-view-id>/seguridadPerfil.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<from-view-id>/seguridadUsuario.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>opUsuario</from-outcome>
+			<to-view-id>/opUsuario.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<from-view-id>/opUsuario.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>seguridadUsuario</from-outcome>
+			<to-view-id>/seguridadUsuario.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+
+</faces-config>

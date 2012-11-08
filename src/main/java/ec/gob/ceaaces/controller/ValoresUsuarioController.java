@@ -1,0 +1,609 @@
+package ec.gob.ceaaces.controller;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
+
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
+import javax.faces.event.ValueChangeEvent;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import ec.gob.ceaaces.data.Aplicacion;
+import ec.gob.ceaaces.data.AplicacionMenu;
+import ec.gob.ceaaces.data.AplicacionRol;
+import ec.gob.ceaaces.data.MenuRol;
+import ec.gob.ceaaces.data.Usuario;
+import ec.gob.ceaaces.model.dtos.seguridades.AplicacionDTO;
+import ec.gob.ceaaces.model.dtos.seguridades.AplicacionMenuDTO;
+import ec.gob.ceaaces.model.dtos.seguridades.AplicacionRolDTO;
+import ec.gob.ceaaces.model.dtos.seguridades.MenuRolDTO;
+import ec.gob.ceaaces.model.dtos.seguridades.PerfilDTO;
+import ec.gob.ceaaces.model.dtos.seguridades.UsuarioDTO;
+import ec.gob.ceaaces.model.dtos.seguridades.UsuarioPerfilDTO;
+import ec.gob.ceaaces.services.exceptions.ServicioException;
+import ec.gob.ceaaces.services.impl.ServicioSeguridadModulosImpl;
+import ec.gob.ceaaces.services.impl.ServicioSeguridadPerfilesImpl;
+import ec.gob.ceaaces.services.impl.ServicioSeguridadUsuariosImpl;
+
+public class ValoresUsuarioController {
+
+    private String idUsuario;
+    private String keyUsuario;
+    private Boolean confirmacionUsuario = false;
+
+    private AplicacionMenu rutaHijo;
+    private AplicacionMenu rutaPadre;
+
+    private Long idAplicacion;
+    private Long idAplicacionMenu;
+    private Long idPadre;
+    private Long idPerfil;
+
+    private Usuario usuario;
+    private Aplicacion aplicacion;
+    private AplicacionRol aplicacionRol;
+    private AplicacionMenu aplicacionMenu;
+    private MenuRol menuRol;
+
+    // @EJB(name = "ServicioSeguridadBean/local")
+    // private ServicioSeguridad ss;
+
+    // grupoApps = grupo de aplicaciones
+    private SortedSet<Aplicacion> grupoApps = new TreeSet<Aplicacion>();
+    private List<PerfilDTO> grupoPerfiles = new ArrayList<PerfilDTO>();
+
+    // Lista para construir la ruta de navegacion del usuario por sesion
+    private List<AplicacionMenu> rutaNavegacion = new ArrayList<AplicacionMenu>();
+
+    private List<AplicacionMenu> principales = new ArrayList<AplicacionMenu>();
+
+    private List<AplicacionMenu> padres = new ArrayList<AplicacionMenu>();
+    private List<AplicacionMenu> hijos = new ArrayList<AplicacionMenu>();
+    private List<AplicacionMenu> arbolMenu = new ArrayList<AplicacionMenu>();
+    private List<PerfilDTO> listaPerfiles = new ArrayList<PerfilDTO>();
+    @Autowired
+    private ServicioSeguridadPerfilesImpl servPerfilSeguridad;
+
+    @Autowired
+    private ServicioSeguridadModulosImpl servSeguridadMod;
+
+    @Autowired
+    private ServicioSeguridadUsuariosImpl servUsuarioSeguridad;
+
+    public ValoresUsuarioController() {
+        aplicacion = new Aplicacion();
+        aplicacionRol = new AplicacionRol();
+        aplicacionMenu = new AplicacionMenu();
+        menuRol = new MenuRol();
+        usuario = new Usuario();
+    }
+
+    public SortedSet<Aplicacion> getGrupoApps() {
+        System.out.println("-----GRUPO APPS-----");
+        System.out.println("LISTA APLICACION: " + grupoApps);
+        return grupoApps;
+    }
+
+    public void setGrupoApps(SortedSet<Aplicacion> grupoApps) {
+        this.grupoApps = grupoApps;
+    }
+
+    public List<PerfilDTO> getGrupoPerfiles() {
+        return grupoPerfiles;
+    }
+
+    public void setGrupoPerfiles(List<PerfilDTO> grupoPerfiles) {
+        this.grupoPerfiles = grupoPerfiles;
+    }
+
+    public Boolean getConfirmacionUsuario() {
+        return confirmacionUsuario;
+    }
+
+    public void setConfirmacionUsuario(Boolean confirmacionUsuario) {
+        this.confirmacionUsuario = confirmacionUsuario;
+    }
+
+    public String getKeyUsuario() {
+        return keyUsuario;
+    }
+
+    public void setKeyUsuario(String keyUsuario) {
+        this.keyUsuario = keyUsuario;
+    }
+
+    public List<AplicacionMenu> getHijos() {
+        return hijos;
+    }
+
+    public void setHijos(List<AplicacionMenu> hijos) {
+        this.hijos = hijos;
+    }
+
+    public AplicacionMenu getRutaPadre() {
+        return rutaPadre;
+    }
+
+    public void setRutaPadre(AplicacionMenu rutaPadre) {
+        this.rutaPadre = rutaPadre;
+    }
+
+    public AplicacionMenu getRutaHijo() {
+        return rutaHijo;
+    }
+
+    public void setRutaHijo(AplicacionMenu rutaHijo) {
+        this.rutaHijo = rutaHijo;
+    }
+
+    public List<AplicacionMenu> getRutaNavegacion() {
+        return rutaNavegacion;
+    }
+
+    public void setRutaNavegacion(List<AplicacionMenu> rutaNavegacion) {
+        this.rutaNavegacion = rutaNavegacion;
+    }
+
+    public List<AplicacionMenu> getPrincipales() {
+        return principales;
+    }
+
+    public void setPrincipales(List<AplicacionMenu> principales) {
+        this.principales = principales;
+    }
+
+    public String getIdUsuario() {
+        return idUsuario;
+    }
+
+    public void setIdUsuario(String idUsuario) {
+        this.idUsuario = idUsuario;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
+
+    public List<AplicacionMenu> getPadres() {
+        return padres;
+    }
+
+    public void setPadres(List<AplicacionMenu> padres) {
+        this.padres = padres;
+    }
+
+    public Long getIdPadre() {
+        return idPadre;
+    }
+
+    public void setIdPadre(Long idPadre) {
+        this.idPadre = idPadre;
+    }
+
+    public List<AplicacionMenu> getArbolMenu() {
+        return arbolMenu;
+    }
+
+    public void setArbolMenu(List<AplicacionMenu> arbolMenu) {
+        this.arbolMenu = arbolMenu;
+    }
+
+    public Long getIdAplicacionMenu() {
+        return idAplicacionMenu;
+    }
+
+    public void setIdAplicacionMenu(Long idAplicacionMenu) {
+        this.idAplicacionMenu = idAplicacionMenu;
+    }
+
+    public AplicacionRol getAplicacionRol() {
+        return aplicacionRol;
+    }
+
+    public void setAplicacionRol(AplicacionRol aplicacionRol) {
+        this.aplicacionRol = aplicacionRol;
+    }
+
+    public Long getIdAplicacion() {
+        return idAplicacion;
+    }
+
+    public void setIdAplicacion(Long idAplicacion) {
+        this.idAplicacion = idAplicacion;
+    }
+
+    public Aplicacion getAplicacion() {
+        return aplicacion;
+    }
+
+    public void setAplicacion(Aplicacion aplicacion) {
+        this.aplicacion = aplicacion;
+    }
+
+    public AplicacionMenu getAplicacionMenu() {
+        return aplicacionMenu;
+    }
+
+    public void setAplicacionMenu(AplicacionMenu aplicacionMenu) {
+        this.aplicacionMenu = aplicacionMenu;
+    }
+
+    public MenuRol getmenuRol() {
+        return menuRol;
+    }
+
+    public void setmenuRol(MenuRol menuRol) {
+        this.menuRol = menuRol;
+    }
+
+    // ok
+    public void verificarCredenciales() {
+        if (this.idUsuario.equals("") || this.keyUsuario.equals("")) {
+            msgAdvertencia("Debe ingresar datos en los campos!");
+            return;
+        }
+
+        if (verificarUsuarioSimple()) {
+            this.confirmacionUsuario = true;
+            cargarUsuario();
+        } else {
+            msgError("Los datos del usuario no concuerdan!");
+            this.confirmacionUsuario = false;
+        }
+    }
+
+    // ok
+    public String ingresar() {
+        String salida = "";
+        try {
+            aplicacion = new Aplicacion();
+            this.aplicacion = appCompletaSinDTO(servSeguridadMod
+                    .obtenerAplicacionPorID(this.idAplicacion));
+            salida = "inSeguridades";
+        } catch (ServicioException se) {
+            msgError("No se pudo recuperar los roles!");
+            this.aplicacion.getRoles().clear();
+            this.aplicacionMenu.getMenuRoles().clear();
+            salida = "";
+        }
+        return salida;
+    }
+
+    // ok
+    private Boolean verificarUsuarioSimple() {
+        boolean esUsuario = false;
+        try {
+            esUsuario = servUsuarioSeguridad.verificarUsuario(this.idUsuario,
+                    this.keyUsuario);
+        } catch (ServicioException se) {
+            se.printStackTrace();
+        }
+        return esUsuario;
+    }
+
+    // ok
+    private void cargarUsuario() {
+        // Limpia la lista de aplicaciones del usuario actual
+        this.grupoApps.clear();
+        try {
+            this.usuario = usuarioSinDTO(servUsuarioSeguridad
+                    .obtenerUsuario(this.idUsuario));
+        } catch (ServicioException se) {
+            msgError("No se pudo obtener los datos del usuario!");
+        }
+    }
+
+    // ok
+    private Usuario usuarioSinDTO(UsuarioDTO usuDTO) {
+        Usuario user = new Usuario();
+        user.setUsername(usuDTO.getUsuario());
+        user.setClave(usuDTO.getClave());
+
+        List<UsuarioPerfilDTO> perfiles = new ArrayList<UsuarioPerfilDTO>();
+        perfiles = usuDTO.getPerfiles();
+
+        for (UsuarioPerfilDTO perfil : perfiles) {
+            Aplicacion app = new Aplicacion();
+            app.setId(perfil.getPerfil().getAplicacion().getId());
+            app.setNombre(perfil.getPerfil().getAplicacion().getNombre());
+            this.grupoApps.add(app);
+        }
+        return user;
+    }
+
+    // ok
+    public String cargarRutaNavegacion1() {
+        String url = "#";
+        this.rutaNavegacion.clear();
+        if (!this.rutaHijo.getHijos().isEmpty()) {
+            AplicacionMenu menuSeleccionado = new AplicacionMenu();
+            menuSeleccionado.setId(this.rutaHijo.getId());
+            menuSeleccionado.setNombre(this.rutaHijo.getNombre());
+            menuSeleccionado.setDestino(this.rutaHijo.getDestino());
+            menuSeleccionado.setNivel(this.rutaHijo.getNivel());
+            menuSeleccionado.setPadre(this.rutaHijo.getPadre());
+            url = menuSeleccionado.getDestino();
+            cargarRutasDeSesion(busquedaBinariaDeArbol(menuSeleccionado));
+        } else {
+            AplicacionMenu menuSeleccionado = new AplicacionMenu();
+            menuSeleccionado = this.rutaHijo;
+            cargarRutasDeSesion(busquedaBinariaDeArbol(menuSeleccionado));
+        }
+        cargarArbol();
+        return url;
+    }
+
+    // ok
+    private void cargarRutasDeSesion(AplicacionMenu menu) {
+        if (menu != null) {
+            this.rutaNavegacion.add(menu);
+            if (!menu.getHijos().isEmpty()) {
+                cargarRutasDeSesion(menu.getHijos().get(0));
+            }
+        }
+    }
+
+    // ok
+    private AplicacionMenu busquedaBinariaDeArbol(AplicacionMenu menuClave) {
+        int bajo = 0;
+        int alto = this.aplicacion.getModulos().size() - 1;
+        int central = 0;
+
+        if (menuClave.getNivel().equals("1")) {
+            return menuClave;
+        }
+
+        AplicacionMenu menuPadre = new AplicacionMenu();
+
+        /**
+         * BUSQUEDA BINARIA:
+         * */
+
+        while (bajo <= alto) {
+            central = (bajo + alto) / 2;
+            menuPadre = this.aplicacion.getModulos().get(central);
+            if (menuClave.getPadre().getId().equals(menuPadre.getId())) {
+                menuPadre.getHijos().add(menuClave);
+                return busquedaBinariaDeArbol(menuPadre);
+            } else if (menuClave.getPadre().getId() > menuPadre.getId()) {
+                bajo = central + 1;
+            } else {
+                alto = central - 1;
+            }
+        }
+        return menuPadre;
+    }
+
+    // ok
+    public String cargarRutaNavegacion() {
+        this.rutaNavegacion.clear();
+        this.arbolMenu.clear();
+        this.hijos.clear();
+        soloHijos(this.aplicacion.getModulos(), this.idPadre);
+        return cargarRutaNavegacion1();
+    }
+
+    // ok
+    private void cargarArbol() {
+        try {
+            this.aplicacion = appCompletaSinDTO(servSeguridadMod
+                    .obtenerAplicacionTotal(this.idAplicacion));
+        } catch (ServicioException se) {
+            msgError("No se pudo recuperar los modulos!");
+            this.aplicacion.getRoles().clear();
+            this.aplicacionMenu.getMenuRoles().clear();
+        }
+    }
+
+    // ok
+    // Metodo usado para transformar una aplicacion recuperada de una consulta
+    private Aplicacion appCompletaSinDTO(AplicacionDTO appDTO) {
+        aplicacion = new Aplicacion();
+
+        this.aplicacion.setId(appDTO.getId());
+        this.aplicacion.setNombre(appDTO.getNombre());
+
+        for (AplicacionRolDTO appRolDTO : appDTO.getRoles()) {
+            aplicacionRol = new AplicacionRol();
+
+            this.aplicacionRol.setId(appRolDTO.getId());
+            this.aplicacionRol.setNombre(appRolDTO.getNombre());
+            this.aplicacionRol.setDescripcion(appRolDTO.getDescripcion());
+
+            this.aplicacion.getRoles().add(this.aplicacionRol);
+        }
+
+        for (AplicacionMenuDTO appMenuDTO : appDTO.getModulos()) {
+            aplicacionMenu = new AplicacionMenu();
+
+            int nivel = 0;
+            nivel = appMenuDTO.getNivel();
+
+            this.aplicacionMenu.setId(appMenuDTO.getId());
+            this.aplicacionMenu.setNombre(appMenuDTO.getNombre());
+            this.aplicacionMenu.setDescripcion(appMenuDTO.getDescripcion());
+            this.aplicacionMenu.setNivel(String.valueOf(nivel));
+
+            if (appMenuDTO.getPadre() != null) {
+                AplicacionMenu appMenuPadre = new AplicacionMenu();
+                appMenuPadre.setId(appMenuDTO.getPadre().getId());
+                appMenuPadre.setNombre(appMenuDTO.getPadre().getNombre());
+                this.aplicacionMenu.setPadre(appMenuPadre);
+            } else {
+                this.aplicacionMenu.setPadre(null);
+            }
+
+            for (MenuRolDTO mrDTO : appMenuDTO.getRoles()) {
+                menuRol = new MenuRol();
+
+                this.menuRol.setId(mrDTO.getId());
+                this.menuRol.setEscritura(mrDTO.getEscritura());
+                this.menuRol.setLectura(mrDTO.getLectura());
+
+                aplicacionRol = new AplicacionRol();
+                this.aplicacionRol.setId(mrDTO.getRol().getId());
+                this.aplicacionRol.setNombre(mrDTO.getRol().getNombre());
+                this.aplicacionRol.setDescripcion(mrDTO.getRol()
+                        .getDescripcion());
+
+                this.menuRol.setRol(this.aplicacionRol);
+                this.aplicacionMenu.getMenuRoles().add(this.menuRol);
+            }
+            this.aplicacion.getModulos().add(this.aplicacionMenu);
+        }
+        cargarPrincipales(this.aplicacion.getModulos());
+        return this.aplicacion;
+    }
+
+    // ok
+    private void cargarPrincipales(List<AplicacionMenu> menus) {
+        this.principales.clear();
+        for (int i = 0; i < menus.size(); i++) {
+            if (menus.get(i).getNivel().equals("1")) {
+                this.principales.add(menus.get(i));
+            }
+        }
+        Collections.sort(this.principales);
+    }
+
+    // ok
+    private void soloHijos(List<AplicacionMenu> menus, Long idRaiz) {
+        int sizePrincipales = this.principales.size();
+
+        for (int i = sizePrincipales; i < menus.size(); i++) {
+            if (!menus.get(i).getNivel().equals("2")) {
+                this.hijos.add(menus.get(i));
+            }
+        }
+
+        for (int i = sizePrincipales; i < menus.size(); i++) {
+            for (int j = 0; j < this.hijos.size(); j++) {
+                if (menus.get(i).getId()
+                        .equals(this.hijos.get(j).getPadre().getId())) {
+                    menus.get(i).getHijos().add(this.hijos.get(j));
+                }
+            }
+            if (menus.get(i).getPadre().getId().equals(idRaiz)) {
+                this.arbolMenu.add(menus.get(i));
+            }
+        }
+        Collections.sort(this.arbolMenu);
+        cargarArbol();
+    }
+
+    // ok
+    public void limpiar() {
+        this.confirmacionUsuario = false;
+        this.usuario = new Usuario();
+        this.idUsuario = "";
+        this.keyUsuario = "";
+    }
+
+    // ok
+    public String salir() {
+        this.usuario = new Usuario();
+        this.grupoApps.clear();
+        this.arbolMenu.clear();
+        this.rutaNavegacion.clear();
+        return "outSeguridades";
+    }
+
+    // ok
+    private static void msgError(String msg) {
+        FacesMessage fmsg = new FacesMessage(FacesMessage.SEVERITY_ERROR, msg,
+                null);
+        FacesContext.getCurrentInstance().addMessage(null, fmsg);
+    }
+
+    private static void msgAdvertencia(String msg) {
+        FacesMessage fmsg = new FacesMessage(FacesMessage.SEVERITY_WARN, msg,
+                null);
+        FacesContext.getCurrentInstance().addMessage(null, fmsg);
+    }
+
+    public Long getIdPerfil() {
+        return idPerfil;
+    }
+
+    public void setIdPerfil(Long idPerfil) {
+        this.idPerfil = idPerfil;
+    }
+
+    public List<PerfilDTO> getListaPerfiles() {
+        System.out.println("-----LISTA PERFILES-----");
+
+        List<PerfilDTO> listaPerfilDTO = new ArrayList<>();
+        System.out.println("ID APLICACION: " + this.idAplicacion);
+        try {
+            listaPerfilDTO = servPerfilSeguridad
+                    .obtenerPerfiles(this.idAplicacion);
+            System.out.println("Lista: " + listaPerfilDTO);
+            // transformarListaDTO(listaPerfilDTO);
+            // cargarRoles();
+            this.listaPerfiles = listaPerfilDTO;
+        } catch (ServicioException se) {
+            msgError("No se pudo recuperar los perfiles!");
+        }
+        return listaPerfiles;
+    }
+
+    public void setListaPerfiles(List<PerfilDTO> listaPerfiles) {
+        this.listaPerfiles = listaPerfiles;
+    }
+
+    // //////////////////////////
+
+    /**
+     * Retorna todos los perfiles que tiene el usuario logeado
+     */
+    // public List<SelectItem> getPerfiles() {
+    // List<SelectItem> perfiles = new ArrayList<SelectItem>();
+    // String nombreUsuario = getUsuario().getNombresCompletos();
+    // System.out.println("nombre usuario " + nombreUsuario);
+    // List<Perfil> resultadoBusqueda = ss
+    // .obtenerPerfilesUsuario(nombreUsuario);
+    // if (resultadoBusqueda != null) {
+    // for (Perfil p : resultadoBusqueda) {
+    // SelectItem i = new SelectItem();
+    // i.setDescription(p.getNombre());
+    // i.setValue(p.getNombre());
+    // i.setLabel(p.getNombre());
+    // perfiles.add(i);
+    // }
+    // }
+    // // System.out.println("perfiles " + perfiles.size());
+    // return perfiles;
+    // }
+
+    public void cargarPerfiles(ValueChangeEvent event) {
+        System.out.println("---METODO cargarPerfiles---");
+
+        System.out.println("ID APLICACION: " + this.idAplicacion);
+
+        PerfilController pc = new PerfilController();
+
+        this.idAplicacion = (Long) event.getNewValue();
+        if (null != event.getNewValue() && this.idAplicacion > 0) {
+            List<PerfilDTO> listaPerfilDTO = new ArrayList<>();
+            try {
+                listaPerfilDTO = servPerfilSeguridad
+                        .obtenerPerfiles(this.idAplicacion);
+                System.out.println("Lista: " + listaPerfilDTO);
+                pc.transformarListaDTO(listaPerfilDTO);
+                pc.cargarRoles();
+            } catch (ServicioException se) {
+                msgError("No se pudo recuperar los perfiles!");
+            }
+        } else {
+            this.listaPerfiles.clear();
+        }
+    }
+}

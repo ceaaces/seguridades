@@ -1,0 +1,152 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j">
+
+<ui:composition template="/templates/template.xhtml">
+	<ui:define name="tituloPagina">MENUS</ui:define>
+	<ui:define name="contenido">
+		<h:outputStylesheet>
+	.tablaCheck{width:400px; height:150px;border:0px;}	
+	.vinculo{text-decoration: none;}
+	.radio{margin-top:-8px; margin-left:-10px;}
+	.leyenda{	
+	margin-top: -8px;
+	text-align: center;
+	font-size: 10px;
+	}
+	.notificacionPadre{	
+	background-color: #CACECF;
+	border-color: #238CDF;
+	font-size: 10px;
+	font-family: cursive;
+	margin-top: 60px;
+	margin-right: 40px;
+	float: right;
+	width: 270px;
+	height: 50px;
+	position: relative; 	
+    border-style: solid;
+    border-width: 1px;	 
+	}	
+	</h:outputStylesheet>
+		<h:outputScript>
+			<script type="text/javascript">
+				function activarLectura(idChk1, idChk2) {
+					var valor = idChk2.checked;
+					alert(valor);
+					if (valor)
+						document.getElementById(idChk1).checked = valor;
+				}
+			</script>
+		</h:outputScript>
+		<h:form>
+			<div class="notificacionPadre">
+				<p style="margin-top: 5px; margin-left: 5px;">Si no quiere
+					asignar un padre deje en SELECCIONAR..., caso contrario elija uno o
+					deje en el padre actual (click sobre 'PADRE')</p>
+			</div>
+			<rich:panel style="height: 400px;">
+				<f:facet name="header">
+					<h:panelGrid columns="5" cellspacing="5">
+						<a4j:commandLink title="Regresar"
+							action="#{moduloController.regresar}">
+							<h:graphicImage value="/images/regresar.png"
+								style="width:24px; height:24px;" alt="ai" />
+						</a4j:commandLink>
+						<div style="width: 10px" />
+						<h:outputText value="APP: #{moduloController.aplicacion.nombre}" />
+						<div style="width: 10px" />
+						<rich:messages id="mensajes" ajaxRendered="true" />
+					</h:panelGrid>
+				</f:facet>
+				<div style="margin-left: 40px; position: absolute;">
+					<h:panelGrid id="panelMenu" columns="2" cellspacing="5">
+						<a4j:outputPanel ajaxRendered="true">
+							<h:commandLink value="PADRE: " title="Resetear PADRE"
+								styleClass="vinculo"
+								rendered="#{moduloController.padres.size() > 0}">
+								<f:setPropertyActionListener
+									target="#{moduloController.idPadre}"
+									value="#{moduloController.aplicacionMenu.padre.id}" />
+								<a4j:ajax event="click" render="comboPadre" />
+							</h:commandLink>
+						</a4j:outputPanel>
+						<a4j:outputPanel ajaxRendered="true">
+							<h:selectOneMenu id="comboPadre" style="width:200px"
+								value="#{moduloController.idPadre}"
+								rendered="#{moduloController.padres.size() > 0}">
+								<f:selectItem itemLabel="SELECCIONAR...[nivel]" itemValue="-1" />
+								<f:selectItems value="#{moduloController.padres}" var="padre"
+									itemLabel="#{padre.nombre} [#{padre.nivel}]"
+									itemValue="#{padre.id}" />
+							</h:selectOneMenu>
+						</a4j:outputPanel>
+						<h:outputText value="DESTINO: " />
+						<h:inputText value="#{moduloController.aplicacionMenu.destino}"
+							style="width:200px" />
+						<h:outputText value="MENU: " />
+						<h:inputText id="txtMenu"
+							value="#{moduloController.aplicacionMenu.nombre}"
+							style="width:200px"
+							onkeyup="this.value = this.value.toUpperCase()" />
+						<h:outputText value="DESCRIPCION: " />
+						<h:inputTextarea id="txtArea"
+							value="#{moduloController.aplicacionMenu.descripcion}"
+							style="width:345px; height:50px" />
+						<h:outputText value="" />
+						<rich:panel
+							style="width: 200px;height: 15px;background-color: #CACECF;border-color: rgb(35, 140, 223);">
+							<p class="leyenda">
+								<b>L</b> = Lectura, <b>L/E</b> = Lectura y Escritura
+							</p>
+						</rich:panel>
+						<h:outputText value="" />
+						<rich:extendedDataTable id="tablaRoles" styleClass="tablaCheck"
+							value="#{moduloController.aplicacion.roles}" var="rolesApp">
+							<rich:column width="40px">
+								<f:facet name="header">
+									<h:outputText value="L" title="Lectura" />
+								</f:facet>
+								<h:selectBooleanCheckbox value="#{rolesApp.lectura}" />
+							</rich:column>
+							<rich:column width="40px">
+								<f:facet name="header">
+									<h:outputText value="L/E" title="Lectura y Escritura" />
+								</f:facet>
+								<h:selectBooleanCheckbox value="#{rolesApp.escritura}" />
+							</rich:column>
+							<rich:column width="316px">
+								<f:facet name="header">ROL</f:facet>
+								<h:outputText value="#{rolesApp.nombre}" />
+							</rich:column>
+						</rich:extendedDataTable>
+					</h:panelGrid>
+					<h:panelGrid columns="4" cellspacing="5">
+						<a4j:commandLink value="#{moduloController.accionModulo}"
+							render="txtMenu,txtArea,mensajes" status="cargandoMenu"
+							action="#{moduloController.guardarAppMenu}" />
+						<a4j:status name="cargandoMenu">
+							<f:facet name="start">
+								<h:graphicImage value="/images/saving.gif"
+									style="width:24px; height:24x;" alt="ai" />
+							</f:facet>
+						</a4j:status>
+						<a4j:commandLink value="#{moduloController.accionMenu}"
+							status="eliminandoMenu" action="#{moduloController.eliminarMenu}" />
+						<a4j:status name="eliminandoMenu">
+							<f:facet name="start">
+								<h:graphicImage value="/images/saving.gif"
+									style="width:24px; height:24x;" alt="ai" />
+							</f:facet>
+						</a4j:status>
+					</h:panelGrid>
+				</div>
+			</rich:panel>
+		</h:form>
+	</ui:define>
+</ui:composition>
+</html>

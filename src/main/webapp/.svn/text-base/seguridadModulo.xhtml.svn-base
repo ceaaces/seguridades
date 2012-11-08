@@ -1,0 +1,96 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j">
+
+<ui:composition template="/templates/template.xhtml">
+	<ui:define name="tituloPagina">MENUS</ui:define>
+	<ui:define name="contenido">
+		<h:outputStylesheet>
+	.estilo{width:0px; height:0px;}
+	.vinculo{text-decoration: none;}
+	</h:outputStylesheet>
+		<h:form id="formMenu">
+			<rich:panel style="height: 400px;overflow-y: scroll;">
+				<f:facet name="header">
+					<h:panelGrid columns="3">
+						<h:outputText value="ARBOL DE MENUS" />
+						<div style="width: 15px; height: 24px" />
+						<rich:messages id="mensajes" ajaxRendered="true" />
+					</h:panelGrid>
+				</f:facet>
+				<div style="margin-left: 160px">
+					<h:panelGrid columns="3" cellspacing="5">
+						<h:outputText value="APLICACION: " />
+						<h:selectOneMenu id="selectApp"
+							value="#{moduloController.idAplicacion}"
+							valueChangeListener="#{moduloController.cargarArbol}">
+							<a4j:ajax event="valueChange" render="opCrear,arbol"
+								execute="@this" />
+							<f:selectItems value="#{moduloController.listaAplicacion}"
+								var="apps" itemValue="#{apps.id}" itemLabel="#{apps.nombre}" />
+						</h:selectOneMenu>
+						<h:commandLink action="#{moduloController.irNuevoModulo}"
+							title="Nuevo Menu">
+							<a4j:outputPanel ajaxRendered="true">
+								<h:outputText id="opCrear" value="CREAR"
+									rendered="#{moduloController.idAplicacion != '0' }" />
+							</a4j:outputPanel>
+							<a4j:param value="Guardar"
+								assignTo="#{moduloController.accionModulo}" />
+							<a4j:param value="" assignTo="#{moduloController.accionMenu}" />
+						</h:commandLink>
+					</h:panelGrid>
+				</div>
+				<a4j:outputPanel ajaxRendered="true">
+					<div style="margin-left: 15px; margin-top: 10px;">
+						<rich:tree id="arbol" toggleType="ajax" var="menu"
+							rendered="#{moduloController.idAplicacion != '0' }"
+							render="formMenu">
+							<rich:treeModelRecursiveAdaptor
+								roots="#{moduloController.arbolMenu}" nodes="#{menu.hijos}">
+								<rich:treeNode iconCollapsed="none" iconExpanded="none"
+									iconLeaf="none" iconClass="estilo">
+									<h:commandLink action="#{moduloController.irOpModulo}"
+										title="Editar" value="#{menu.nombre}" styleClass="vinculo">
+										<f:setPropertyActionListener
+											target="#{moduloController.idAplicacionMenu}"
+											value="#{menu.id}" />
+										<f:setPropertyActionListener
+											target="#{moduloController.idPadre}" value="#{menu.padre.id}" />
+										<a4j:param value="Guardar cambios"
+											assignTo="#{moduloController.accionModulo}" />
+										<a4j:param value="Eliminar menu"
+											assignTo="#{moduloController.accionMenu}" />
+									</h:commandLink>
+								</rich:treeNode>
+								<rich:treeModelAdaptor nodes="#{menu}">
+									<rich:treeNode iconCollapsed="none" iconExpanded="none"
+										iconLeaf="none" iconClass="estilo">
+										<h:commandLink action="#{moduloController.irOpModulo}"
+											title="Editar" value="#{menu.nombre}" styleClass="vinculo">
+											<f:setPropertyActionListener
+												target="#{moduloController.idAplicacionMenu}"
+												value="#{menu.id}" />
+											<f:setPropertyActionListener
+												target="#{moduloController.idPadre}"
+												value="#{menu.padre.id}" />
+											<a4j:param value="Guardar cambios"
+												assignTo="#{moduloController.accionModulo}" />
+											<a4j:param value="Eliminar menu"
+												assignTo="#{moduloController.accionMenu}" />
+										</h:commandLink>
+									</rich:treeNode>
+								</rich:treeModelAdaptor>
+							</rich:treeModelRecursiveAdaptor>
+						</rich:tree>
+					</div>
+				</a4j:outputPanel>
+			</rich:panel>
+		</h:form>
+	</ui:define>
+</ui:composition>
+</html>

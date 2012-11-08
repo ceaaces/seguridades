@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j">
+
+<ui:composition template="/templates/template.xhtml">
+	<ui:define name="tituloPagina">PERFILES</ui:define>
+	<ui:define name="contenido">
+		<h:outputStylesheet>
+	.tablaCheck{width:350px; height:160px;border:0px;}	
+	</h:outputStylesheet>
+		<h:form>
+			<rich:panel style="height: 400px;">
+				<f:facet name="header">
+					<h:panelGrid columns="5" cellspacing="5">
+						<a4j:commandLink title="Regresar"
+							action="#{perfilController.regresar}">
+							<h:graphicImage value="/images/regresar.png"
+								style="width:24px; height:24px;" alt="ai" />
+						</a4j:commandLink>
+						<div style="width: 10px" />
+						<h:outputText value="APP: #{perfilController.aplicacion.nombre}" />
+						<div style="width: 10px" />
+						<rich:messages id="mensajes" ajaxRendered="true" />
+					</h:panelGrid>
+				</f:facet>
+				<div style="margin-left: 85px">
+					<h:panelGrid id="panelPerfiles" columns="2" cellspacing="5">
+						<h:outputText value="PERFIL: " />
+						<h:inputText value="#{perfilController.perfil.nombre}"
+							style="width:350px"
+							onkeyup="this.value = this.value.toUpperCase()" />
+						<h:outputText value="" />
+						<rich:extendedDataTable id="tablaRoles" styleClass="tablaCheck"
+							value="#{perfilController.aplicacion.roles}" var="rolApp">
+							<rich:column width="40px">
+								<h:selectBooleanCheckbox value="#{rolApp.seleccionado}" />
+							</rich:column>
+							<rich:column width="308px">
+								<f:facet name="header">ROL</f:facet>
+								<h:outputText value="#{rolApp.nombre}" />
+							</rich:column>
+						</rich:extendedDataTable>
+					</h:panelGrid>
+					<h:panelGrid columns="2" cellspacing="5">
+						<a4j:commandLink value="#{perfilController.accionPerfil}"
+							render="panelPerfiles,tablaRoles,mensajes" status="cargandoPerf"
+							action="#{perfilController.guardarPerfil}" />
+						<a4j:status name="cargandoPerf">
+							<f:facet name="start">
+								<h:graphicImage value="/images/saving.gif"
+									style="width:24px; height:24x;" alt="ai" />
+							</f:facet>
+						</a4j:status>
+					</h:panelGrid>
+				</div>
+			</rich:panel>
+		</h:form>
+	</ui:define>
+</ui:composition>
+</html>

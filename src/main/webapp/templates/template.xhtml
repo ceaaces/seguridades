@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j">
+
+<h:head>
+	<title><ui:insert name="tituloPagina">Nombre de la Pagina</ui:insert></title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<h:outputStylesheet library="css" name="template.css">
+	.estilo{width:0px; height:0px;}	
+	.vinculo{text-decoration: none;}	
+	</h:outputStylesheet>
+</h:head>
+
+<h:body styleClass="principal">
+	<div style="width: 1004px; margin-left: 10px;">
+		<div id="header">
+			<div id="logo">LOGO</div>
+			<div id="credenciales">
+				<ui:insert name="credenciales">
+					<h:form id="formSalida">
+						<h:panelGrid columns="2" cellspacing="3"
+							style="float:right;margin-top:-85px;">
+							<h:outputText value="USUARIO: " style="font-size:12px;" />
+							<h:commandLink action="#{valoresUsuarioController.salir}"
+								value="#{valoresUsuarioController.usuario.username}"
+								title="Cerrar sesion">
+								<a4j:param value="false"
+									assignTo="#{valoresUsuarioController.confirmacionUsuario}" />
+							</h:commandLink>
+						</h:panelGrid>
+					</h:form>
+				</ui:insert>
+			</div>
+		</div>
+		<div id="menuPrincipal">
+			<ui:insert name="menuPrincipal">
+				<h:outputStylesheet>
+				.vinculo1{text-decoration: none;font-size:11px;}
+				</h:outputStylesheet>
+				<h:form id="formMenuPrincipal">
+					<rich:panel id="panelMenuPrincipal" style="height: 30px;">
+						<a4j:repeat value="#{valoresUsuarioController.principales}"
+							var="principal">
+							<h:commandLink value="#{principal.nombre}"
+								action="#{valoresUsuarioController.cargarRutaNavegacion}"
+								styleClass="vinculo1">
+								<f:setPropertyActionListener
+									target="#{valoresUsuarioController.idPadre}"
+									value="#{principal.id}" />
+								<f:setPropertyActionListener
+									target="#{valoresUsuarioController.rutaHijo}"
+									value="#{principal}" />
+								<a4j:ajax event="click" render="arbol,panelRutaNavegacion" />
+							</h:commandLink>
+							<h:outputLabel value=" :: " style="color: #0090FF" />
+						</a4j:repeat>
+					</rich:panel>
+				</h:form>
+			</ui:insert>
+		</div>
+		<div style="float: none">
+			<div style="float: left; border: 1px solid #CAD6E0">
+				<div>
+					<rich:tree switchType="client" value="#{sesionUsuario.nodoRaiz}"
+						var="item" adviseNodeOpened="#{sesionUsuario.presentaExpandido}"
+						nodeFace="#{item.tipo}">
+						<rich:treeNode type="menu" iconLeaf="/images/iconFolder.gif"
+							icon="/images/iconFolder.gif">
+				                #{item.nombre}
+				        </rich:treeNode>
+						<rich:treeNode type="opcion">
+							<a href="#{item.urlCompleto}"> #{item.nombre}</a>
+						</rich:treeNode>
+					</rich:tree>
+				</div>
+
+			</div>
+			<div
+				style="float: left; margin: 10px; font-size: 11px; font-family: 'Verdana'">
+				<ui:insert name="body">Page Body</ui:insert>
+			</div>
+		</div>
+		<div id="pagina">
+			<table style="width: 100%;">
+				<tr>
+					<td id="menuSecundario"><ui:insert name="menuSecundario">
+							<h:outputStylesheet>
+							.estilo{width:0px; height:0px;}							
+							.vinculo{text-decoration: none;}
+							</h:outputStylesheet>
+							<h:form id="formTree">
+								<rich:tree id="arbol" toggleType="ajax" var="menu">
+									<rich:treeModelRecursiveAdaptor
+										roots="#{valoresUsuarioController.arbolMenu}"
+										nodes="#{menu.hijos}">
+										<rich:treeNode iconCollapsed="none" iconExpanded="none"
+											iconLeaf="none" iconClass="estilo">
+											<h:commandLink id="menu1"
+												action="#{valoresUsuarioController.cargarRutaNavegacion1}"
+												value="#{menu.nombre}" styleClass="vinculo">
+												<f:setPropertyActionListener
+													target="#{valoresUsuarioController.rutaHijo}"
+													value="#{menu}" />
+												<a4j:ajax event="click" render="panelRutaNavegacion" />
+											</h:commandLink>
+										</rich:treeNode>
+										<rich:treeModelAdaptor nodes="#{menu}">
+											<rich:treeNode iconCollapsed="none" iconExpanded="none"
+												iconLeaf="none" iconClass="estilo">
+												<h:commandLink id="menu2" value="#{menu.nombre}"
+													styleClass="vinculo"
+													action="#{valoresUsuarioController.cargarRutaNavegacion1}">
+													<f:setPropertyActionListener
+														target="#{valoresUsuarioController.rutaHijo}"
+														value="#{menu}" />
+													<a4j:ajax event="click" render="panelRutaNavegacion" />
+												</h:commandLink>
+											</rich:treeNode>
+										</rich:treeModelAdaptor>
+									</rich:treeModelRecursiveAdaptor>
+								</rich:tree>
+							</h:form>
+						</ui:insert></td>
+					<td id="areaTrabajo">
+						<div id="breadcrumb">
+							<ui:insert name="breadcrumb">
+								<h:outputStylesheet>
+							.vinculo2{text-decoration: none;font-size:10px;}
+							</h:outputStylesheet>
+								<h:form>
+									<rich:panel id="panelRutaNavegacion" style="height:20px;">
+										<a4j:repeat value="#{valoresUsuarioController.rutaNavegacion}"
+											var="ruta">
+											<h:commandLink styleClass="vinculo2" value="#{ruta.nombre}" />
+											<h:outputLabel value=" >> "
+												style="color: #0090FF;font-size:10px;" />
+										</a4j:repeat>
+									</rich:panel>
+								</h:form>
+							</ui:insert>
+						</div>
+						<div id="contenido">
+							<ui:insert name="contenido">Contenido de la pagina</ui:insert>
+						</div>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+</h:body>
+</html>
